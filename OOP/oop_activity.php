@@ -49,6 +49,9 @@
         print_r($student->grades);
         echo "<br>";
 
+        var_dump($student->showGrades()); // string(29) "Grades: 85, 90, 95, 80, 75"
+        echo "<br>";
+        
         echo $student->showGrades();
         echo "<br>";
 
