@@ -30,7 +30,7 @@
                 $average = $sum / count($this->grades); // count() - built-in function for counting the number of elements in an array
                 return "Student: ($this->name), Average Grade: ($average)";
             } 
-
+            //Method
             public function showGrades() {
                 return "Grades: " . implode(", ", $this->grades);
             }
