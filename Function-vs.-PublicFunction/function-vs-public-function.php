@@ -2,6 +2,8 @@
 inside a class -->
 
 <!-- public function - is a method that is defined or used inside a class -->
+
+
 <?php 
 
 // using Function 
@@ -13,16 +15,15 @@ function listOfGrocery() {
         echo ($index + 1) . ". " . $items . "<br>";
     }
 }
-
-listOfGrocery();
+listOfGrocery(); // calling the function
 
 
 // public function in class
-
 class Groceries {
     public $items = []; // property is expecting an array
     public $name;
 
+    // constructor -
     public function __construct($name, $items = []){
         $this->items = $items;
         $this->name = $name;
@@ -35,8 +36,8 @@ class Groceries {
     }
 }
 
-$groceries = new Groceries("Grocery List", ["Meat", "Fish", "Chicken", "Pork"]);
+$groceries = new Groceries("Grocery List", ["Meat", "Fish", "Chicken", "Pork"]); // instantiating the class
 
-echo $groceries->showGroceryItems();
+echo $groceries->showGroceryItems(); // calling the public function inside the class
 
 ?>
