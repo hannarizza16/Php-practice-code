@@ -54,8 +54,49 @@ function largestNumber($numbers){
             $largest = $number;
         }
     }
-    return $largest;
+    return "<br> Largest: $largest";
 }
 
-echo largestNumber([10, -16, 200, 15, 18, 1])
+echo largestNumber([10, -16, 200, 15, 18, 1]);
+
+
+
+// OOP using public function 
+
+class SumOffAllEvenNumbers {
+    //properties of class
+    public $numbers = [];
+    public $reverseString;
+
+    public function __construct($number, $reverseString){
+        $this->numbers = $number;
+        $this->reverseString = $reverseString;
+    }
+
+    public function getSumOfEvenNumbers() {
+        $sum = 0;
+        foreach($this->numbers as $number) {
+            if($number % 2 == 0 ){
+                $sum += $number;
+            }
+        }
+        return "<br> $sum";
+    }
+
+    public function reverseString() {
+
+        $reversedString = "";
+
+        for($i = strlen($this->reverseString) -1; $i >= 0; $i--){
+            $reversedString .= $this->reverseString[$i];
+        }
+        return "<br>" . $reversedString;
+    }
+}
+
+
+$sumOfEvenNumbers = new SumOffAllEvenNumbers([1,2,3,4,5,6], "Reverse this STRING");
+
+echo $sumOfEvenNumbers->getSumOfEvenNumbers(); // 12
+echo $sumOfEvenNumbers->reverseString();
 ?>
