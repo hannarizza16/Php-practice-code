@@ -23,6 +23,20 @@ $gradeResult = match (true){
 
 echo $gradeResult; // Talk to your teacher
 
+// winter match()
+
+$season = 1;
+
+$whatIsTheSeason = match ($season) {
+    1, 2, 3, 4, 5 => "Winter",
+    6, 7, 8, 9 => "Summer",
+    10, 11, 12 => "Autumn",
+    default => "Not a valid month"
+};
+
+echo $whatIsTheSeason;
+
+
 // Switch case
 
 $dayOfTheWeek = 1;
