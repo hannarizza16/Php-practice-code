@@ -1,4 +1,5 @@
 <!-- constant -->
+<!-- define() function -->
 
 <?php 
 
