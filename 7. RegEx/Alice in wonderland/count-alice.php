@@ -1,5 +1,6 @@
 <?php 
 
+// ALice = 399
 function CountAlice() {
     $file = 'alice-in-wonderland.txt';
     $text = file_get_contents($file);
@@ -40,4 +41,35 @@ function CountWonder($countThisWord) {
 $countedWords = CountWonder($countThisWord);
 
 echo "<br> The word $countThisWord is a total of $countedWords";
+
+// eugene's (Alice = 221 )
+function countArray() {
+$keyText = ["alice" => 0];
+
+$textFile = fopen('alice-in-wonderland.txt', 'r');
+
+while (!feof($textFile)) {
+    $pointer = trim(fgets($textFile)); 
+    // $words = preg_split('/\s+/', $pointer); // split by any whitespace
+
+    $words = explode(" ", $pointer);
+
+    foreach ($words as $word) {
+        // 'any word that is not a letter replace it with '' - nothing 
+        // eg. ALICE!! -> ALICE or strtolower - Alice, -< alice'
+        $word = strtolower(preg_replace('/[^a-z]/i', '', $word));
+        //array_key_exists yung nagtitingin kung nag eexist yung key sa array na $textFile
+        if (array_key_exists($word, $keyText)) {
+            $keyText[$word]++;
+        }
+    }
+}
+    fclose($textFile);
+
+foreach ($keyText as $word => $count) {
+    echo $word . " occured " . $count .  " times" . PHP_EOL;
+}
+
+}
+countArray();
 ?>
