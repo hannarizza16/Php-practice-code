@@ -16,6 +16,10 @@ $originalName = 'Alice';
 $replaceWith = 'Michael';
 
 function ReplaceAlice($originalName, $replaceWith) {
+    // we can use global to get the $originalName and $replaceWith
+    // global $originalName, $replaceWith;
+    // instead of passing it via parameter.
+
     $file = 'replace-alice.txt';
     $text = file_get_contents($file); //file_get_content
     $pattern = "/$originalName/i"; //  /i case insensitive

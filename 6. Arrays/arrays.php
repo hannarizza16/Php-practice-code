@@ -1,8 +1,8 @@
 <!-- kinds of arrays -->
 <!-- 1. indexed 
 2. associative
-3.multidimensional
-sorting arrays
+3.multidimensional x
+sorting arrays x
 -->
 
 <!-- indexed array LOOP -->

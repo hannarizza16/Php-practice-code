@@ -16,7 +16,7 @@
     
 
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
-        <input type="number" step="any" name="num1" placeholder="Number 1" required value="<?php echo isset($num1) ? $num1 : '' ;?>">
+        <input type="number" step="any" name="num1" placeholder="Number 1" value="<?php echo isset($num1) ? $num1 : '' ;?>">
         <select name="operators" id="" value="<?php echo isset($operators) ? $operators : ''; ?>"> 
             <option value="" disabled selected>Choose operator</option>
             <option value="+">+</option>
@@ -24,7 +24,7 @@
             <option value="*">*</option>
             <option value="/">/</option>
         </select>
-        <input type="number" step="any" name="num2" placeholder="Number 2" required value="<?php echo isset($num2) ? $num2 : '';?>">  
+        <input type="number" step="any" name="num2" placeholder="Number 2" value="<?php echo isset($num2) ? $num2 : '';?>">  
         <input type="submit" name="submit">
     </form>
 
@@ -60,7 +60,7 @@
             }
 
             if (!is_numeric($num1) || !is_numeric($num2)){
-                echo "<p class='error'> Please enter a valid number. </p>";
+                echo "<p class='error'> Please fill out all form and enter a valid number. </p>";
                 $errors = true;
                 exit;
             }
