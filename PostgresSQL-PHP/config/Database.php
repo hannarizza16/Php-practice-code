@@ -16,49 +16,103 @@ $dotenv->load();
 // Database connection parameters
 
 // Define Connection class - Class name should start with uppercase letter
-class Connection {
+class Connection
+{
     // initialize property
     protected $pdo;
     protected $table;
-    protected $limit = 0;
+    protected $limit = 5;
+    protected $where = [];
+    protected $orderDirection;
+    protected $offset = 0;
 
     // constructor to initialize database connection
-    public function __construct(public $database, public $host, public $port, public $username, public $password = null) {
+    public function __construct(public $database, public $host, public $port, public $username, public $password = null)
+    {
         //$dsn - Data Source name where the database is located
         // sprintf(data source, host, port, database name, )
         // %s - string placeholder
-        $dsn = sprintf('pgsql:host=%s;port=%s;dbname=%s', $host, $port, $database ); 
+        $dsn = sprintf('pgsql:host=%s;port=%s;dbname=%s', $host, $port, $database);
 
         // try catch block for error handling connection
         try {
             // create a new PDO instance
             $this->pdo = new PDO($dsn, $username, $password);
-            echo "Connected to database successfully\n";
+            // echo "Connected to database successfully\n";
         } catch (Exception $e) {
             exit('Connection failed' . $e->getMessage());
         }
     }
-
-    //fetch all records from a table
-    public function fetchAll($table) {
-        // prepare and execute SQL statement
-        $stmt = $this->pdo->prepare("SELECT * FROM $table");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function limit($limit){
-        $this->limit =(int)$limit;
+    // creating a method to set limit
+    public function limit($limit)
+    {
+        $this->limit = $limit;
         return $this;
     }
 
+    public function where($where)
+    {
+        $this->where = $where;
+        return $this;
+    }
+
+    public function orderBy($direction = 'asc')
+    {
+        $this->orderDirection = $direction;
+        return $this;
+    }
+
+    public function offset($offset)
+    {
+        $this->offset = $offset;
+        return $this;
+    }
+
+    public function get($table)
+    {
+        // theres a pattern here SELECT ... FROM ... WHERE ... ORDER BY ... LIMIT ... OFFSET ...
+        // order of SQL clauses matter
+        $baseQuery = "SELECT * FROM $table";
+
+        if ($this->where) {
+            $baseQuery .= " WHERE $this->where";
+        }
+
+        // if ($this->orderDirection){
+        //     $baseQuery .= " ORDER BY id $this->orderDirection";
+        // }
+
+        if ($this->limit) {
+            if ($this->orderDirection === 'asc') {
+                $baseQuery = " SELECT * FROM ($baseQuery LIMIT $this->limit) sub ORDER BY id DESC";
+            } else {
+                $baseQuery .= " LIMIT $this->limit";
+            }
+        }
+
+        if ($this->offset) {
+            $baseQuery .= " OFFSET $this->offset";
+        }
+
+        $stmt = $this->pdo->prepare($baseQuery);
+        // execute table query
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
 }
 
 $connection = new Connection($_ENV['DB_DATABASENAME'], $_ENV['DB_HOST'], $_ENV['DB_PORT'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'] ?? null);
 
 
 $floodControl = $connection
-->fetchAll('contractors')
-;
+    ->limit(5)
+    ->orderBy()
+    // ->where('id=5')
+    // ->offset(0)
+    ->get('contractors');
 
 
+// include the table.php file to display the data
+require_once '../table.php';
