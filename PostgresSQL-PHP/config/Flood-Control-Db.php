@@ -115,4 +115,4 @@ $floodControl = $connection
 
 
 // include the table.php file to display the data
-require_once '../table.php';
+require_once '../client/Flood-Control-Table.php';
