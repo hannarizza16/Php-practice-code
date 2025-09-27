@@ -10,7 +10,9 @@ require '../vendor/autoload.php';
 // Load .env file
 // __DIR__ returns the directory of the current file
 // dirname() returns the parent directory of the given path
+// createImmutable() method creates a new Dotenv instance that loads environment variables from a .env file located in the specified directory
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+//load() method loads the environment variables from the .env file into the $_ENV superglobal array
 $dotenv->load();
 
 // Database connection parameters
