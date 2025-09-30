@@ -1,10 +1,10 @@
 <?php
 
 class BankAccount {
-    protected $balance = 100;
-    protected $deposit = 0;
-    protected $withdraw = 0;
-    protected $initialBalance;
+    protected float $balance = 100;
+    protected float $deposit = 0;
+    protected float $withdraw = 0;
+    protected float $initialBalance;
 
     public function __construct($deposit, $withdraw) {
         $this->initialBalance = $this->balance;
@@ -12,7 +12,9 @@ class BankAccount {
         $this->withdraw = $withdraw;
     }
 
-    public function getBalance() {
+    // : float = is a return type declaration
+    // it specifies that the method will return a value of type float
+    public function getBalance(): float {
         return $this->balance;
     }
 
@@ -24,12 +26,17 @@ class BankAccount {
     }
 
     public function withdraw() {
-        if ($this->withdraw > $this->balance) {
-            echo "Insufficient Funds<br>"; 
-            $this->withdraw = 0; // no withdeaw will happen
-        } else {
-            $this->balance -= $this->withdraw;
+        $amount = $this->withdraw;
+        if ($amount <= 0) {
+            throw new InvalidArgumentException("Withdraw amount must be > 0");
         }
+
+        if ($amount > $this->balance) {
+            echo "Insufficient funds. Current balance: " . $this->getBalance() . "<br>";
+            return $this;
+        }
+
+        $this->balance -= $amount;
         return $this;
     }
 
@@ -41,9 +48,24 @@ class BankAccount {
     }
 }
 
-$bank = new BankAccount(50, 70);
+class SavingsAccount extends BankAccount{
+    protected $interest = 0.05;
+
+    public function addInterest() {
+        $interest = $this->balance * $this->interest;
+        $this->balance += $interest;
+        echo "Interest Added: $interest <br>";
+        return $this;
+
+    }
+
+
+}
+
+$bank = new SavingsAccount(50, 50);
 $bank->deposit()
 ->withdraw()
+->addInterest()
 ->display();
 
 

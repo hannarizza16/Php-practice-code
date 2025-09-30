@@ -8,9 +8,11 @@
 <body>
     
 <?php 
-include_once 'person.php';
-$flightDetails = new FlightDetails();
+include_once 'autoloader.php';
+
+$flightDetails = new FlightDetails(); // this lines paasess in autoloader.php (FlightDetails)
 echo $flightDetails->getDetails(new Person());
+
 ?>
 </body>
 </html>
