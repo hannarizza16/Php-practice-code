@@ -23,7 +23,7 @@ class Connection
     // initialize property
     protected $pdo;
     protected $table;
-    protected $limit = 5;
+    protected $limit = 0;
     protected $where = [];
     protected $orderDirection;
     protected $offset = 0;
@@ -109,7 +109,7 @@ $connection = new Connection($_ENV['DB_DATABASENAME'], $_ENV['DB_HOST'], $_ENV['
 
 
 $floodControl = $connection
-    ->limit(5)
+    // ->limit(5)
     ->orderBy()
     // ->where('id=5')
     // ->offset(0)

@@ -56,6 +56,52 @@ class Connection {
             return $stmt->fetchAll();
         }
 
+        //11. lets try inserting data
+        // (typeDeclaration, $parameter): returnType
+        public function insert(array $data){
+
+            
+            //13. check if student already exists
+            if (isset($data['student'])){
+                $checkingSql = "SELECT COUNT(*) FROM $this->table WHERE student = :student"; // SQL query to check for duplicate
+                $checkingStmt = $this->pdo->prepare(($checkingSql));
+                $checkingStmt->execute(['student' => $data['student']]);
+            }
+
+            if ($checkingStmt->fetchColumn() > 0) {
+                echo "student {$data['student']} already exists";
+                return false;
+            }
+
+            // inserting blank query is not acceptable
+            if (empty($data['student']) || (empty($data['grade']) && $data['grade'] === 0 || (empty($data['subject'])))) {
+                echo "Student name, grade and subject are required.";
+                return false;
+            }
+
+            //14. if no duplicate found, proceed with insert
+            $keys = array_keys($data); // ['student', 'grade']
+            $fields = implode(', ', $keys); // student, grade
+            $placeholders = implode(', ', array_map(fn($key) => ":$key", $keys)); // :student, :grade
+            //$query "INSERT INTO students (student, grade) VALUES (:student, :grade);
+            $query = "INSERT INTO $this->table ($fields) VALUES ($placeholders)";
+            // prepare the query
+            $stmt = $this->pdo->prepare($query);
+            // var_dump($placeholders); //debugging 
+            // execute the query with the data
+            return $stmt->execute($data);
+        }
+
+
+        // 15. lets try deleting data
+        public function delete($id){
+            $keys = array_keys($id); // ['id']
+            $conditions = implode(' AND ', array_map(fn($key) => "$key = :$key", $keys)); // id = :id
+            $query = "DELETE FROM $this->table WHERE $conditions";
+            $stmt = $this->pdo->prepare($query);
+            return $stmt->execute($id);
+        }
+
     }
 
 
@@ -67,13 +113,62 @@ $connection = new Connection(
     $_ENV['DB_PASSWORD']
 );
 
+// fetching the data
 $students = $connection
 ->table('students')
 ->get();
 
 // var_dump($students);
+// $insert = $connection 
+// ->table('students')
+// ->insert(['student' => 'Grace Doe', 'grade' => 86]);
 
-include_once'../client/Student-Tabke.php';
+
+// $delete = $connection 
+// ->table('students')
+// ->delete(['id' => 6]);
+
+// var_dump($insert);
+
+// this is to handle form submission for deleting a student record
+// remove the record from the database and redirect back to the table page
+// request method is GET because we are using a link to delete
+// the link is in the client/Student-Table.php file
+//request method from client/Student-Table.php
+if(isset($_GET['delete'])) {
+    // $connection->table('students')
+    //->delete(['id' => (int)$_GET['delete]])
+    $id = $_GET['delete'];
+    $delete = $connection
+    ->table('students')
+    ->delete(['id' => $id]);
+
+    if ($delete) {
+        header('Location: ../client/Student-Table.php');
+        exit();
+    } else {
+        echo "Error deleting record";
+    }
+}
+
+if(isset($_POST['submit'])){
+    $student = $_POST['student'];
+    $grade = (int)$_POST['grade'];
+    $subject = $_POST['subject'];
+
+    $insert = $connection
+    ->table('students')
+    ->insert(['student' => $student, 'grade' => $grade, 'subject' => $subject]);
+
+    if ($insert) {
+        header('Location: ../client/Student-Table.php');
+        exit();
+    } else {
+        echo "Error inserting record";
+    }
+}
+
+include_once'../client/Student-Table.php';
 
 
 ?>
