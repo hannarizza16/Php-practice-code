@@ -94,7 +94,7 @@ class Connection
 		// 	$this->limit,
 		// ));
 		//
-		echo $baseQuery;
+		// echo $baseQuery; // echoing the query
 
 		return $stmt->fetchAll();
 	}
@@ -103,6 +103,7 @@ class Connection
 
 $connection = new Connection($_ENV['DB_NAME'], $_ENV['DB_HOST'], $_ENV['DB_PORT'], $_ENV['DB_USER']);
 
+//method chaining
 $users = $connection
 // -> - 
 	->table('users')

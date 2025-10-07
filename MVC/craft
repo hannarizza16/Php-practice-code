@@ -1,0 +1,37 @@
+<?php
+// using $args or argument vector
+// create new bash script
+// purpose is to run our project when we type this command instead of 
+// php localhost:8000 
+
+require_once 'vendor/autoload.php';
+
+$command = $argv[1] ?? null; //null coalesce operator
+
+switch($command) {
+    case 'serve':
+        $host = 'localhost';
+        $port = '8000';
+
+        echo "Starting server on http://$host:$port\n";
+        echo "Press Ctrl+C to stop\n\n";
+        // echo var_dump(__DIR__);
+
+        passthru("php -S $host:$port");  // executes the program
+        break; 
+    case 'about':
+        echo"Cohort 2025";
+        break;
+    default:
+        echo "Craft Framework \n";
+        echo "----------------------- \n";
+        echo "Available Commands: \n";
+        echo "serve - Starts the development server \n";
+        echo "about - Show the credits\n";
+        break;
+
+}
+
+
+
+?>

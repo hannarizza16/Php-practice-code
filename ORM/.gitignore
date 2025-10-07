@@ -1,0 +1,4 @@
+.env
+vendor
+node_modeules
+.DS_store

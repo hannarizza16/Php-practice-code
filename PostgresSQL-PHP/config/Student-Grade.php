@@ -15,6 +15,9 @@ class Connection {
     // 4. make porerties
 
     protected $table;
+    protected $pdo;
+    protected $filterCondition;
+    protected $filterValue;
 
     // 5. create constructor to initialize the connection
     public function  __construct(public $database, public $host, public $port, public $username, public $password = null )
@@ -45,25 +48,41 @@ class Connection {
             return $this;
         }
 
+        public function filter($condition, $value) {
+            $this->filterCondition = $condition;
+            $this->filterValue = $value;
+            return $this;
+        }
+
         // 10. create a method to get data from the table
         public function get($columns = ['*']){
             $identifier = implode(', ', $columns);
-            $baseQuery = "SELECT $identifier FROM $this->table";
-            
+            //$baseQuery = "SELECT id, student, grade FROM $this->table";
+            $baseQuery = sprintf("SELECT $identifier FROM %s", $this->table);
+
+            // check if filter condition and value are set
+            if($this->filterCondition && $this->filterValue) {
+                // WHERE student ='John Doe'
+                //WERE id = 1
+                $baseQuery .= " WHERE $this->filterCondition = '$this->filterValue'";
+            }
+            // condition are always declared before preparing and executing the query
+
+            // prepare and execute the query
             $stmt = $this->pdo->prepare($baseQuery);
             $stmt->execute();
-            
             return $stmt->fetchAll();
+
+        
         }
 
         //11. lets try inserting data
         // (typeDeclaration, $parameter): returnType
         public function insert(array $data){
-
-            
+        
             //13. check if student already exists
             if (isset($data['student'])){
-                $checkingSql = "SELECT COUNT(*) FROM $this->table WHERE student = :student"; // SQL query to check for duplicate
+                $checkingSql = sprintf("SELECT COUNT(*) FROM %s WHERE student = :student", $this->table) ;// SQL query to check for duplicate
                 $checkingStmt = $this->pdo->prepare(($checkingSql));
                 $checkingStmt->execute(['student' => $data['student']]);
             }
@@ -113,10 +132,14 @@ $connection = new Connection(
     $_ENV['DB_PASSWORD']
 );
 
+//method chaining
 // fetching the data
 $students = $connection
 ->table('students')
+// ->filter('Id', '3')
 ->get();
+
+// var_dump();
 
 // var_dump($students);
 // $insert = $connection 
@@ -151,6 +174,7 @@ if(isset($_GET['delete'])) {
     }
 }
 
+//inserting a new student record
 if(isset($_POST['submit'])){
     $student = $_POST['student'];
     $grade = (int)$_POST['grade'];
