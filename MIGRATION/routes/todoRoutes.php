@@ -10,6 +10,6 @@ use App\Controllers\TodoController;
 // $router->get('/', );
 
 //             uri  ,  callback
-$router->get('/', [TodoController::class, 'getAll']);
+$router->get('/', [TodoController::class, 'getTodo']);
 $router->get('/todos', [TodoController::class, 'getAll']);
 

@@ -7,7 +7,7 @@ class Router
 	protected $requestMethod;
 	protected $requestUri;
 	protected $routes = [];
-
+    protected $routesExist = false;
     // first to run
 	public function __construct()
 	{
@@ -86,25 +86,31 @@ class Router
 
 	public function exec()
 	{
-    // echo "<pre>";
-    // echo "=== Router Debug ===\n";
-    // echo "Request Method: " . $this->requestMethod . "\n";
-    // echo "Request URI: " . $this->requestUri . "\n";
-    // echo "Registered Routes:\n";
-    // var_dump($this->routes);
-    // echo "====================\n";
+
 		foreach ($this->routes as $route) {
+            if ($route['path'] === $this->requestUri){
+                $this->routesExist = true;
+            }
+
+            if (!$this->routesExist) {
+                echo "Route '{$this->requestUri}' does not exist." . "<br>" ;
+                $this->abort(404);
+                return;
+            }
+
 			if ($route['method'] === $this->requestMethod) {
+
 				$params = $this->matchRoute($route['path'], $this->requestUri);
 
 				if ($params !== false) {
 					// If the user passed an array, ensure that the array passed only contains  
 					// tuples, and ensure that the class exists and the method exists
 					if (is_array($route['callback'])) {
+
 						if (count($route['callback']) !== 2) {
 							$this->abort(404);
 						}
-
+                        // destructuring 
 						[$className, $fnName] = $route['callback'];
 
 						if (!class_exists($className)) {
@@ -113,11 +119,12 @@ class Router
                         }
 							$cls = new $className; 
 
+                            // if method doesnt exist
 							if (!method_exists($cls, $fnName)) {
                                 echo "Method $fnName not found in $className.";
 								$this->abort(404);
 							}
-
+                            // else
                             $result = $cls->$fnName();
                             if ($result !== null){
                                 echo $result;

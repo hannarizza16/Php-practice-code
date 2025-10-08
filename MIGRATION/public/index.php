@@ -1,24 +1,18 @@
 <?php
 
 use Dotenv\Dotenv;
-// use App\Controllers\TodoController;
+use Core\Connection;
+
 
 require_once __DIR__ . '/../vendor/autoload.php';
-
-//debug
-// echo "Router file loaded!<br>";
-// var_dump(class_exists('TodoController')); // should now return true
-// exit;
-
-// if (class_exists(TodoController::class)) {
-//     echo "TodoController FOUND!<br>";
-// } else {
-//     echo "TodoController NOT FOUND!<br>";
-// }
 
 // load env
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
+
+//connecting to dbase
+require_once  '../Core/Database.php'; //loads dbcon
+
 
 //start your router or app.
 //initialize router from api.phhp
