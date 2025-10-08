@@ -1,0 +1,27 @@
+<?php
+
+require_once 'vendor/autoload.php';
+
+$command = $argv[1] ?? null; // null coalesce operator
+
+switch ($command) {
+	case 'serve':
+		$host = '127.0.0.1';
+		$port = '8000';
+
+		echo "Starting server on http://$host:$port\n";
+		echo "Press Ctrl+C to stop\n\n";
+
+		passthru("php -S $host:$port -t public");
+		break;
+	case 'about':
+		echo "Cohort of Revlv-Internauts-2025";
+		break;
+	default:
+		echo "Craft Framework v0.1.0\n";
+		echo "---------------------------------------\n\n";
+		echo "Available commands:\n";
+		echo "	serve	- Start the development server \n";
+		echo "	about 	- Show the credits\n";
+		break;
+}
